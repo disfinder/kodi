@@ -1,0 +1,15 @@
+---
+# handlers file for nginx
+- name: nginx restart
+  become: yes
+  service:
+    name: nginx
+    state: restarted
+
+
+## make some config check before restart!!
+- name: nginx reload
+  become: yes
+  service: 
+    name: nginx
+    state: reloaded

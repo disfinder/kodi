@@ -1,0 +1,32 @@
+---
+# tasks file for proxied-by-nginx
+
+
+
+- name: Template upstream for nginx
+  become: yes
+  template:
+    src: utserver_upstream.conf.j2
+    dest: /etc/nginx/conf.d/utserver.conf
+    validate: "echo 'http { include \'%s\'; }' > /tmp/n && nginx -t -c /tmp/n"
+  notify: nginx reload
+
+
+- name: Template site
+  become: yes
+  template:
+    src: utserver_site.conf.j2
+    dest: /etc/nginx/sites-available/utserver.conf
+    validate: "echo 'http { include \'%s\'; }' > /tmp/n && nginx -t -c /tmp/n"
+  notify: nginx reload
+    
+
+- name: Enable site
+  become: yes
+  file:
+    src: /etc/nginx/sites-available/utserver.conf
+    dest: /etc/nginx/sites-enabled/utserver.conf
+    state: link
+    validate: "echo 'http { include \'%s\'; }' > /tmp/n && nginx -t -c /tmp/n"
+  notify: nginx reload
+

@@ -1,0 +1,39 @@
+---
+# tasks file for supported-by-samba
+
+#TODO: make variables!
+
+- name: Insert smb config block
+  notify: samba reload
+  become: yes
+  blockinfile:
+    backup: yes
+    insertafter: EOF
+    path: /etc/samba/smb.conf
+    block: |
+          ##all income2
+          [inbox]
+              read only = no
+              guest ok = yes
+              browseable = yes
+              writeable = yes
+              path = /home/kodi/inbox
+          [utorrent-w]
+              read only = no
+              guest ok = yes
+              browseable = yes
+              writeable = yes
+              path = /opt/utserver/autoload
+          [torrents]
+              read only = yes
+              guest ok = yes
+              browseable = yes
+              writeable = no
+              path = /home/kodi/torrents
+          [music]
+              read only = no
+              guest ok = yes
+              browseable = yes
+              writeable = yes
+              path = /home/kodi/torrents/020_muzlo
+

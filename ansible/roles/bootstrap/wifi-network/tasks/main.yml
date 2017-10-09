@@ -1,0 +1,24 @@
+---
+# tasks file for wifi-newtork
+
+- name: Create WPA-supplicant config
+  become: yes
+  template:
+    src: wpa_supplicant.conf.j2
+    dest: /etc/wpa_supplicant.conf
+
+
+#TODO: rewrite to blockinfile
+- name: Set wlan0
+  become: yes
+  lineinfile:
+    state: present
+    dest: /etc/network/interfaces
+    line: |
+      auto wlp2s0
+      iface wlp2s0 inet static
+      address 10.10.0.5
+      netmask 255.255.0.0
+      gateway 10.10.0.1
+      dns-nameservers 10.10.0.1
+      wpa-conf /etc/wpa_supplicant.conf

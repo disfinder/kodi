@@ -1,0 +1,5 @@
+---
+# tasks file for gitlab-server
+
+- debug: 
+    msg: "MOCK: install GitLab"

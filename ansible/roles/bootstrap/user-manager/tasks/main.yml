@@ -1,0 +1,36 @@
+---
+# tasks file for user-manager
+
+- name: "Make sure we have a {{ sudo_passwordless_group }} group"
+  group:
+    name: "{{ sudo_passwordless_group }}"
+    state: present
+
+- name: "Allow '{{ sudo_passwordless_group }}' group to have passwordless sudo"
+  lineinfile:
+    dest: /etc/sudoers
+    state: present
+    regexp: '^%{{ sudo_passwordless_group }}'
+    line: '%{{ sudo_passwordless_group }} ALL=(ALL) NOPASSWD: ALL'
+    validate: visudo -cf %s
+
+- name: "Ensure manager user {{ manager_user }} is in {{ sudo_passwordless_group }} group"
+  user:
+    name: "{{ manager_user }}"
+    state: present
+    append: yes
+    groups: "{{ sudo_passwordless_group }}"
+
+- name: Set authorized key for user {{ manager_user }} copying it from current user
+  authorized_key:
+    user: "{{ manager_user}}"
+    state: present
+    key: "{{ lookup('file', lookup('env','HOME') + '/.ssh/id_rsa.pub') }}"
+
+
+- name: Create application user
+  user:
+    name: "{{ application_user }}"
+    state: present
+    password: "{{ application_pass }}"
+    createhome: yes

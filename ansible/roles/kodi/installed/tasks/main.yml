@@ -1,0 +1,29 @@
+---
+# tasks file for kodi
+
+- name: Add KODI repository 
+  become: yes
+  apt_repository:
+    repo: 'ppa:team-xbmc/ppa'
+
+- name: Install KODI
+  become: yes
+  apt:
+    update_cache: yes
+    name: "{{ item }}"
+    state: present
+    install_recommends: no
+  with_items:
+      - kodi
+      
+- name: Make user autologin
+  become: yes 
+  template:
+    src: lightdm.conf.j2
+    dest: /etc/lightdm/lightdm.conf.d/kodi.conf
+
+
+#TODO: 
+# - keyboard
+# - rocks playlist
+# - template rocks playlist in keyboard

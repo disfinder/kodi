@@ -1,0 +1,58 @@
+---
+# tasks file for installed
+
+
+- name: 'Get uname'
+  shell: "uname -r"
+  register: uname
+
+- name: "Remove old installations of docker"
+  apt:
+    name: "{{ item }}"
+    state: absent
+  with_items:
+    - docker
+    - docker-engine
+    - docker.io
+
+- name: "Install packages for gpg key"
+  apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: no
+  with_items:
+    - apt-transport-https
+    - ca-certificates
+    - curl
+    - software-properties-common
+
+- name: Installl python modules
+  pip:
+    name: "{{ item }}"
+  with_items:
+    - urllib3
+    - pyOpenSSL
+    - ndg-httpsclient
+    - pyasn1
+
+- name: Add docker repo
+  apt_repository:
+    repo: deb https://download.docker.com/linux/ubuntu trusty stable
+    state: present
+    filename: docker
+
+- name: Add docker repo key
+  apt_key:
+    id: 0EBFCD88
+    state: present
+    url: https://download.docker.com/linux/ubuntu/gpg
+
+- name: "Install packages"
+  apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  with_items:
+    - "linux-image-extra-{{ uname.stdout }}"
+    - "linux-image-extra-virtual"
+    - "docker-ce"

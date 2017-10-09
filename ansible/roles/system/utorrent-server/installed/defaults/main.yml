@@ -1,0 +1,18 @@
+---
+
+ut_folder: "{{ application_root_folder }}/utserver"
+ut_service_name: utserver
+
+
+ut_webui_port: 8081
+ut_bind_port: 52414
+
+ut_folders:
+  root:           "{{ ut_folder }}"
+  dat:            "{{ ut_folder }}/dat"
+  active:         "{{ ut_folder }}/torrents/00_in_progress"
+  completed:      "{{ ut_folder }}/torrents/01_completed"
+  download:       "/home/{{ application_user }}/torrents" ##"{{ ut_folder }}/files"
+  torrent_files:  "{{ ut_folder }}/torrents"
+  temp_files:     "{{ ut_folder }}/tmp"
+  autoload:       "{{ ut_folder }}/autoload"

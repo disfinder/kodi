@@ -1,0 +1,93 @@
+---
+# tasks file for .
+
+- name: Create folders
+  become: yes
+  file:
+    state: directory
+    dest: "{{ item }}"
+    owner: "{{ manager_user }}"
+    group: "{{ manager_group }}"
+    mode: ug+rwX
+  with_items:
+    - "{{ application_root_folder }}"
+    - "{{ application_root_folder }}/downloads"
+
+- name: clean dat folder
+  become: yes
+  file:
+    state: absent
+    name: "{{ ut_folders.dat }}"
+  ignore_errors: yes
+
+- name: Make UT folder
+  become: yes
+  file:
+    state: directory
+    dest: "{{ item.value }}"
+    owner: "{{ application_user }}"
+    group: "{{ application_group }}"
+    mode: ug+rwX
+  with_dict: "{{ ut_folders }}"
+
+
+- name: Copy local distro to remote
+  copy:
+    src: ut.tgz2
+    dest: "/opt/downloads/utserver.tar.gz"
+  register: result_copy
+  ignore_errors: yes
+
+
+
+#- name: Download UT distro
+#  debug:
+#    msg: "Copy succeeded"
+#  when: result_copy|succeeded
+
+- name: Download UT distro (only if absent local copy)
+  get_url:
+    dest: "/opt/downloads/utserver.tar.gz"
+    url: http://download-new.utorrent.com/endpoint/utserver/os/linux-x64-ubuntu-13-04/track/beta/ 
+    # url: http://download-new.utorrent.com/endpoint/utserver/os/linux-i386-ubuntu-13-04/track/beta/
+  when: result_copy|failed
+
+- name: Extract UT distro
+  become: yes
+  unarchive:
+    remote_src: yes
+    src: /opt/downloads/utserver.tar.gz
+    dest: "{{ ut_folder }}"
+    owner: "{{ application_user }}"
+    group: "{{ application_group }}"
+    extra_opts:
+     - "--strip-components=1"
+    
+- name: Template UT config
+  become: yes
+  template:
+    src: utserver.conf.j2
+    dest: "{{ ut_folder }}/utserver.conf"
+    owner: "{{ application_user }}"
+    group: "{{ application_group }}"
+
+- name: Template UT service
+  become: yes
+  template:
+    src: utserver.service.j2
+    dest: /etc/systemd/system/utserver.service
+
+# - name: Template init script
+#   become: yes
+#   template:
+#     src: utserver.j2
+#     dest: "/etc/init.d/{{ ut_service_name }}"
+#     mode: a+x
+
+# - name: Activate UT service
+#   become: yes
+#   service: 
+#     name: "{{ ut_service_name }}"
+#     enabled: yes
+#     state: started
+

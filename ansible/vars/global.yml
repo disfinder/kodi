@@ -1,0 +1,16 @@
+---
+# this is main global vars file
+#pass == manager
+manager_user: "disfinder"
+manager_group: 'wheel'
+# manager_pass: "{{ vault_manager_pass }}"
+
+sudo_passwordless_group: wheel
+
+application_user: "kodi"
+application_group: "kodi"
+
+application_pass: "{{ vault_application_pass }}"
+
+application_root_folder: /opt
+

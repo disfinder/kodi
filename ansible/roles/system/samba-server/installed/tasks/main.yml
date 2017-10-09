@@ -1,0 +1,8 @@
+---
+# tasks file for samba-server
+
+- name: Install Samba
+  become: yes
+  package:
+    name: samba
+    state: present

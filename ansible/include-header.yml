@@ -1,0 +1,5 @@
+---
+- name: Include global main vars
+  tags:
+    - always
+  include_vars: vars/global.yml

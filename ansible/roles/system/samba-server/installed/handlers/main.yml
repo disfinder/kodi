@@ -1,0 +1,16 @@
+---
+# handlers file for samba-server
+
+- name: samba restart
+  become: yes
+  service:
+    name: smbd
+    state: restarted
+
+
+## make some config check before restart!!
+- name: samba reload
+  become: yes
+  service: 
+    name: smbd
+    state: reloaded

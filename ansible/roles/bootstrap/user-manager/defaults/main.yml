@@ -1,0 +1,8 @@
+---
+# defaults file for user-manager
+
+#pass == manager
+manager_user: "manager"
+manager_pass: '$6$SxQ0RQzQXdyk7ikb$pQ5XJi3CeM9HEfGGUHNiV3s2nKy6xX.OdLU7EFUh6I6YdiAx2l4hXJXqskc1U0s4m4lDHfajHTX2yMuowqIaP/'
+
+sudo_passwordless_group: wheel

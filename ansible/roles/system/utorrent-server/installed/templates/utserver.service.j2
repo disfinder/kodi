@@ -1,0 +1,10 @@
+[Unit]
+Description=uTorrent server
+
+[Service]
+Type=simple
+User={{ application_user }}
+ExecStart={{ ut_folder }}/utserver -settingspath {{ ut_folders.dat }} -logfile {{ ut_folder }}/utserver.log -configfile {{ ut_folder }}/utserver.conf -pidfile {{ ut_folder }}/utserver.pid
+
+[Install]
+WantedBy=multi-user.target

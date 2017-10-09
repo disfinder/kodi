@@ -1,0 +1,55 @@
+---
+# tasks file for generic
+- name: Install common software package
+  become: yes
+  package:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - "{{ common_generic_software_package }}"
+
+# - name: "RHEL: Install common software package"
+#   become: yes
+#   yum:
+#     state: installed
+#     name: "{{ item }}"
+#   with_items:
+#     - "{{ common_generic_software_package }}" 
+#   when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+
+
+# - name: "DEBIAN: Install common software package"
+#   become: yes
+#   apt:
+#     state: present
+#     name: "{{ item }}"
+#   with_items:
+#    - "{{ common_generic_software_package }}"  
+#   when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+
+- name: "Make Mignight Commander understand arrows (part 1)"
+  lineinfile:
+    dest: "/home/{{ item }}/.config/mc/ini"
+    line: '[Midnight-Commander]'
+    insertbefore: BOF
+    create: yes
+    backup: yes
+    state: present
+  with_items:
+    - "{{ manager_user }}"
+ #   - "{{ application_user }}"
+    # - "root"
+
+
+- name: "Make Mignight Commander understand arrows (part 2)"
+  lineinfile:
+    dest: "/home/{{ item }}/.config/mc/ini"
+    regexp: "^navigate_with_arrows=.*"
+    line: 'navigate_with_arrows=true'
+    create: yes
+    backup: yes
+    state: present
+  with_items:
+    - "{{ manager_user }}"
+  #  - "{{ application_user }}"
+    # - "root"

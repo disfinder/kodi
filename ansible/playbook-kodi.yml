@@ -1,0 +1,43 @@
+---
+- name: Install KODI
+  hosts: kodi
+  gather_facts: yes
+  pre_tasks:
+    - name: Include main vars
+      include: include-header.yml
+  roles:
+    - name: Apply generic
+      role: system/generic
+    - name: Install KODI
+      role: kodi/installed
+    - name: Install UT server
+      role: system/utorrent-server/installed
+      tags: utorrent
+    - name: Make UT server supported by Nginx
+      role: system/utorrent-server/proxied-by-nginx
+      tags: utorrent
+    - name: Make UT server supported by Samba
+      role: system/utorrent-server/supported-by-samba
+      tags: utorrent
+    - name: Install docker
+      role: system/docker/installed
+      tags: docker
+    - name: Congigure GitLab server + nginx
+      role: system/gitlab-server
+      tags: gitlab
+    # - name: Install and configure nginx
+    #   role: system/nginx/installed
+    #   tags: nginx
+    # - name: Configure SAMBA server
+    #   role: kodi/samba-server
+    #   tags: samba
+    # - name: Congigure GitLab server + nginx
+    #   role: kodi/gitlab-server
+    #   tags: gitlab
+    # - name: Configure OpenVPN server (no, need use not OPENvpn, but something possible on mobile)
+    #   role: kodi/openvpn-server
+    #   tags: openvpn
+    # - name: Configure Squit proxy
+    #   role: kodi/squid-server
+    #   tags: squid
+

@@ -1,0 +1,8 @@
+---
+common_generic_software_package:
+  - vim
+  - nmap
+  - screen
+  - zip
+  - unzip
+  - mc
